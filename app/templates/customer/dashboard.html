@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Customer dashboard for ComplaintIQ AI complaint intelligence.">
+  <title>Customer Dashboard | ComplaintIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <script>
+    (function () {
+      var theme = localStorage.getItem("complaintiq-theme");
+      if (theme !== "light" && theme !== "dark") theme = "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+    <i class="fa-solid fa-moon theme-icon-moon"></i>
+    <i class="fa-solid fa-sun theme-icon-sun"></i>
+  </button>
+
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <main class="dashboard-shell" id="dashboardShell">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-brand">
+        <a href="#" class="sidebar-logo">
+          <div class="sidebar-logo-icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="sidebar-logo-text">ComplaintIQ</span>
+        </a>
+        <p class="sidebar-subtitle">AI Complaint Intelligence</p>
+      </div>
+
+      <nav class="nav-menu" aria-label="Primary navigation">
+        <a class="nav-link active" href="#" data-section="dashboard-section">
+          <i class="fa-solid fa-house"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link" href="#" data-section="submit-section">
+          <i class="fa-solid fa-file-circle-plus"></i>
+          <span>Submit Complaint</span>
+        </a>
+        <a class="nav-link" href="#" data-section="complaints-section">
+          <i class="fa-solid fa-list-check"></i>
+          <span>My Complaints</span>
+        </a>
+        <a class="nav-link" href="#" data-section="profile-section">
+          <i class="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="user-meta">
+          <div class="user-avatar">{{ user_name[0] if user_name else 'C' }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ user_name }}</div>
+            <div class="user-role">Customer</div>
+          </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-link">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <section class="dashboard-main" id="dashboardMain">
+      <section class="page-section active" id="dashboard-section">
+        <section class="dashboard-brand-panel">
+          <div class="dashboard-brand-mark">
+            <div class="brand-icon">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div class="brand-copy">
+              <h1>ComplaintIQ</h1>
+              <p class="brand-tagline">Turn Every Complaint into Action<br>Powered by AI</p>
+            </div>
+          </div>
+          <button type="button" class="btn-primary btn-dashboard-cta" data-section="submit-section">Submit a Complaint</button>
+        </section>
+
+        <section class="dashboard-topbar">
+          <div class="dashboard-heading">
+            <h1 class="dashboard-greeting">Good evening, {{ user_name }}</h1>
+            <p class="dashboard-subtitle">Submit and track your complaints from one place.</p>
+          </div>
+          <div class="profile-pill">
+            <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="profile-info">
+              <span class="profile-name">{{ user_name }}</span>
+              <span class="profile-label">Customer account</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="welcome-card">
+            <span class="welcome-pill"><i class="fa-solid fa-rocket"></i> AI Complaint Assistant</span>
+            <h2 class="welcome-title">How can we help?</h2>
+            <p class="welcome-copy">Tell us what happened and our system will automatically analyze your complaint.</p>
+            <p class="welcome-copy welcome-copy--secondary">We’ll keep the process confidential and streamlined for you.</p>
+          </article>
+        </section>
+      </section>
+
+      <section class="page-section" id="submit-section">
+        <div class="section-header">
+          <div>
+            <h1>Submit a Complaint</h1>
+            <p class="section-caption">Tell us what happened and we’ll take it from there.</p>
+          </div>
+        </div>
+
+        {% if message %}
+          <section class="alert-banner">
+            <strong>{{ message }}</strong>
+            {% if message == "Complaint submitted successfully." %}
+              <span>Your complaint has been received and is being processed.</span>
+            {% endif %}
+          </section>
+        {% endif %}
+
+        <article class="form-card">
+          <form method="post">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="title">Complaint Title</label>
+                <input class="form-input" id="title" name="title" type="text" required placeholder="Briefly describe your issue" value="{{ title }}">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="description">Complaint Description</label>
+                <textarea class="form-textarea" id="description" name="description" required placeholder="Tell us what happened, including any useful details...">{{ description }}</textarea>
+              </div>
+
+              <button type="submit" class="btn-primary">Submit Complaint</button>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <section class="page-section" id="complaints-section">
+        <div class="section-header">
+          <div>
+            <h1>My Complaints</h1>
+            <p class="section-caption">Review only your submitted complaints and open details for each item.</p>
+          </div>
+        </div>
+
+        <article class="recent-card complaint-list-card">
+          <div class="complaint-list">
+            {% if complaints and complaints|length > 0 %}
+              {% for complaint in complaints %}
+                {% set display_status = 'Resolved' if complaint['status'] == 'Resolved' else 'Submitted' %}
+                <div class="complaint-item js-complaint-card" role="button" tabindex="0"
+                     data-complaint-id="{{ complaint['id'] }}"
+                     data-complaint-title="{{ complaint['title']|e }}"
+                     data-complaint-description="{{ complaint['description']|replace('\n', '&#10;')|e }}"
+                     data-complaint-admin-response="{{ complaint['admin_response']|default('', true)|replace('\n', '&#10;')|e }}"
+                     data-complaint-status="{{ display_status }}"
+                     data-complaint-date="{{ complaint['created_at']|format_datetime }}">
+                  <div class="complaint-meta">
+                    <div class="complaint-title">{{ complaint['title'] }}</div>
+                    <div class="complaint-date">{{ complaint['created_at']|format_datetime }}</div>
+                  </div>
+                  <div class="complaint-status-group">
+                    {% if display_status == 'Resolved' %}
+                      <span class="status-chip status-chip--resolved">Resolved</span>
+                    {% endif %}
+                    <span class="status-chip status-chip--submitted">Submitted</span>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-state">
+                <strong>No complaints yet</strong>
+                <span>Your submitted complaints will appear here.</span>
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      </section>
+
+      <section class="page-section" id="complaint-detail-section">
+        <div class="section-header section-header-space">
+          <div>
+            <h1>Complaint Details</h1>
+            <p class="section-caption">Read the original complaint submission without edit access.</p>
+          </div>
+          <button type="button" class="btn-secondary" id="backToComplaints">Back to My Complaints</button>
+        </div>
+
+        <article class="detail-card">
+          <div class="detail-group">
+            <span class="detail-label">Title</span>
+            <p class="detail-value" id="detailTitle"></p>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Description</span>
+            <p class="detail-value detail-description" id="detailDescription"></p>
+          </div>
+          <div class="detail-group detail-grid">
+            <div>
+              <span class="detail-label">Status</span>
+              <div style="margin-top: 0.4rem;">
+                <span class="status-chip" id="detailStatus"></span>
+              </div>
+            </div>
+            <div>
+              <span class="detail-label">Date Submitted</span>
+              <p class="detail-value" id="detailDate"></p>
+            </div>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Admin Response</span>
+            <p class="detail-value" id="detailAdminResponse">Awaiting response</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="page-section" id="profile-section">
+        <div class="section-header">
+          <div>
+            <h1>Profile</h1>
+            <p class="section-caption">Your account details are shown here.</p>
+          </div>
+        </div>
+
+        <article class="profile-card">
+          <div class="profile-row">
+            <span class="profile-label">Full Name</span>
+            <span class="profile-value">{{ user_name }}</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-label">Email</span>
+            <span class="profile-value">{{ user_email }}</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-label">Account Role</span>
+            <span class="profile-value">{{ user_role }}</span>
+          </div>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

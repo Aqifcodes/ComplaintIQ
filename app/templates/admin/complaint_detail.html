@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin complaint detail view for ComplaintIQ.">
+  <title>Complaint Detail | ComplaintIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <script>
+    (function () {
+      var theme = localStorage.getItem("complaintiq-theme");
+      if (theme !== "light" && theme !== "dark") theme = "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+    <i class="fa-solid fa-moon theme-icon-moon"></i>
+    <i class="fa-solid fa-sun theme-icon-sun"></i>
+  </button>
+
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <main class="dashboard-shell" id="dashboardShell">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-brand">
+        <a href="{{ url_for('admin_dashboard') }}" class="sidebar-logo">
+          <div class="sidebar-logo-icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="sidebar-logo-text">ComplaintIQ</span>
+        </a>
+        <p class="sidebar-subtitle">Admin Complaint Management</p>
+      </div>
+
+      <nav class="nav-menu" aria-label="Primary navigation">
+        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+          <i class="fa-solid fa-list"></i>
+          <span>Complaints</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="user-meta">
+          <div class="user-avatar">{{ user_name[0] if user_name else 'A' }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ user_name }}</div>
+            <div class="user-role">Admin</div>
+          </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-link">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <section class="dashboard-main" id="dashboardMain">
+      <section class="page-section active" id="dashboard-section">
+        <section class="dashboard-topbar">
+          <div class="dashboard-heading">
+            <h1 class="dashboard-greeting">Complaint Details</h1>
+            <p class="dashboard-subtitle">Review the complaint details and submit a response to resolve it.</p>
+          </div>
+          <div class="profile-pill">
+            <div class="profile-avatar"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="profile-info">
+              <span class="profile-name">{{ user_name }}</span>
+              <span class="profile-label">Admin account</span>
+            </div>
+          </div>
+        </section>
+
+        <article class="detail-card">
+          {% if message %}
+            <section class="alert-banner">
+              <strong>{{ message }}</strong>
+            </section>
+          {% endif %}
+
+          <div class="detail-group">
+            <span class="detail-label">Title</span>
+            <p class="detail-value">{{ complaint['title'] }}</p>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Description</span>
+            <p class="detail-value detail-description">{{ complaint['description'] }}</p>
+          </div>
+          <div class="detail-group detail-grid">
+            <div>
+              <span class="detail-label">Predicted Category</span>
+              <p class="detail-value">{{ complaint['predicted_category'] or 'Unknown' }}</p>
+            </div>
+            <div>
+              <span class="detail-label">Category Confidence</span>
+              <p class="detail-value">{{ (complaint['category_confidence'] * 100)|round(1) if complaint['category_confidence'] is not none else 'N/A' }}%</p>
+            </div>
+            <div>
+              <span class="detail-label">Predicted Priority</span>
+              <p class="detail-value">{{ complaint['predicted_urgency'] or 'Unknown' }}</p>
+            </div>
+            <div>
+              <span class="detail-label">Priority Confidence</span>
+              <p class="detail-value">{{ (complaint['priority_confidence'] * 100)|round(1) if complaint['priority_confidence'] is not none else 'N/A' }}%</p>
+            </div>
+          </div>
+          <div class="detail-group detail-grid">
+            <div>
+              <span class="detail-label">Category predicted by</span>
+              <p class="detail-value">{{ complaint['category_source'] or 'Random Forest' }}</p>
+            </div>
+            <div>
+              <span class="detail-label">Priority predicted by</span>
+              <p class="detail-value">{{ complaint['priority_source'] or 'Random Forest' }}</p>
+            </div>
+          </div>
+          <div class="detail-group detail-grid">
+            <div>
+              <span class="detail-label">Status</span>
+              <div style="margin-top: 0.4rem;">
+                {% set status_val = 'Resolved' if complaint['status'] == 'Resolved' else 'Awaiting Response' %}
+                <span class="status-chip status-chip--{{ 'resolved' if status_val == 'Resolved' else 'awaiting' }}">{{ status_val }}</span>
+              </div>
+            </div>
+            <div>
+              <span class="detail-label">Created Date</span>
+              <p class="detail-value">{{ complaint['created_at']|format_datetime }}</p>
+            </div>
+          </div>
+
+          <div class="detail-group">
+            <span class="detail-label">Admin Response</span>
+            <p class="detail-value">{{ complaint['admin_response'] if complaint['admin_response'] else 'Awaiting response' }}</p>
+          </div>
+
+          {% if complaint['status'] != 'Resolved' %}
+          <form method="post" class="detail-card">
+            <div class="detail-group">
+              <label class="detail-label" for="admin_response">Write Response & Resolve</label>
+              <textarea id="admin_response" name="admin_response" class="form-textarea" placeholder="Write a response to the customer..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Submit Response</button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary" style="margin-left:1rem;">Back to list</a>
+          </form>
+          {% else %}
+          <div style="margin-top: 1rem;">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to list</a>
+          </div>
+          {% endif %}
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a free ComplaintIQ account and start automating your complaint management workflows.">
+  <title>Sign Up | ComplaintIQ Auth</title>
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+
+  <main class="auth-container">
+    <!-- Left Hero Panel (Matches Login page for visual consistency) -->
+    <section class="hero-section">
+      <div class="hero-header">
+        <a href="#" class="logo-container" id="brand-logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="logo-text">ComplaintIQ</span>
+        </a>
+      </div>
+
+      <div class="hero-body">
+        <div class="hero-tag">
+          <i class="fa-solid fa-sparkles"></i> Next-Gen Intelligence
+        </div>
+        <h1 class="hero-title">AI-Powered Complaint Intelligence Platform</h1>
+        <p class="hero-description">
+          Automate, analyze, and resolve customer complaints with state-of-the-art AI. Turn feedback into actionable intelligence instantly.
+        </p>
+
+        <!-- CSS Only Abstract Illustration -->
+        <div class="hero-illustration" aria-hidden="true">
+          <!-- Concentric Orbit Lines -->
+          <div class="illustration-orbit orbit-1">
+            <div class="node node-blue orbit-1-node-1"></div>
+            <div class="node node-indigo orbit-1-node-2"></div>
+          </div>
+          <div class="illustration-orbit orbit-2">
+            <div class="node node-purple orbit-2-node-1"></div>
+            <div class="node node-blue orbit-2-node-2"></div>
+          </div>
+          <div class="illustration-orbit orbit-3"></div>
+
+          <!-- Central AI Core Node -->
+          <div class="illustration-center">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+
+          <!-- Glassmorphism Mockups -->
+          <div class="glass-mockup mockup-sentiment">
+            <div class="sentiment-pill"></div>
+            <span class="sentiment-text">Negative Sentiment Detected</span>
+          </div>
+
+          <div class="glass-mockup mockup-chart">
+            <div class="mockup-chart-header">Complaint volume</div>
+            <div class="mockup-chart-bars">
+              <div class="chart-bar active" style="height: 18px;"></div>
+              <div class="chart-bar active" style="height: 25px;"></div>
+              <div class="chart-bar active" style="height: 12px;"></div>
+              <div class="chart-bar active" style="height: 32px;"></div>
+              <div class="chart-bar active" style="height: 20px;"></div>
+            </div>
+          </div>
+
+          <div class="glass-mockup mockup-status">
+            <div class="status-indicator"></div>
+            <span class="status-label">Routing ticket...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-footer">
+        <span class="footer-meta">&copy; 2026 ComplaintIQ Inc. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Auth Card Panel -->
+    <section class="card-section">
+      <div class="auth-card">
+        <div class="card-header">
+          <h2 class="card-title">Create your account</h2>
+          <p class="card-subtitle">Get started with a free 14-day trial, no credit card required.</p>
+        </div>
+
+        <form id="signup-form" novalidate>
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-user input-icon"></i>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                class="form-input" 
+                placeholder="Alex Carter" 
+                autocomplete="name"
+                required
+              >
+            </div>
+            <span class="invalid-feedback" id="name-error">
+              <i class="fa-solid fa-circle-info"></i> Full Name is required.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Work Email</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-envelope input-icon"></i>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-input" 
+                placeholder="name@company.com" 
+                autocomplete="email"
+                required
+              >
+            </div>
+            <span class="invalid-feedback" id="email-error">
+              <i class="fa-solid fa-circle-info"></i> Please enter a valid email address.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-input has-password-toggle" 
+                placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="password-toggle" data-target="password" aria-label="Toggle password visibility">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <span class="invalid-feedback" id="password-error">
+              <i class="fa-solid fa-circle-info"></i> Password must be at least 8 characters long with letters and numbers.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-shield-halved input-icon"></i>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                name="confirmPassword" 
+                class="form-input has-password-toggle" 
+                placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="password-toggle" data-target="confirmPassword" aria-label="Toggle password visibility">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <span class="invalid-feedback" id="confirmPassword-error">
+              <i class="fa-solid fa-circle-info"></i> Passwords do not match.
+            </span>
+          </div>
+
+          <div class="form-actions">
+            <label class="remember-me">
+              <input type="checkbox" id="terms" class="checkbox-custom" required>
+              <span>I agree to the <a href="#" class="forgot-password">Terms</a> &amp; <a href="#" class="forgot-password">Privacy</a></span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btn-signup-submit">
+            <span class="btn-text">Create Account</span>
+            <div class="spinner"></div>
+          </button>
+        </form>
+
+        <p class="switch-auth-mode">
+          Already have an account? 
+          <a href="{{ url_for('login') }}" class="switch-auth-link" id="link-to-login">Sign in</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
